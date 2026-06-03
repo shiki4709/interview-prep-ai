@@ -48,9 +48,14 @@ export default function HomePage() {
             Practice with AI-generated questions tailored to each role.
           </p>
         </div>
-        <Link href="/interviews/new">
-          <Button>New Interview</Button>
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/history">
+            <Button variant="outline">History</Button>
+          </Link>
+          <Link href="/interviews/new">
+            <Button>New Interview</Button>
+          </Link>
+        </div>
       </div>
 
       {loading && (

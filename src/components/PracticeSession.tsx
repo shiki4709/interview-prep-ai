@@ -15,7 +15,7 @@ interface PracticeSessionProps {
   readonly interviewId: number;
 }
 
-type SessionState = "idle" | "recording" | "transcribing" | "evaluating" | "done" | "error";
+type SessionState = "idle" | "recording" | "transcribing" | "reviewing" | "evaluating" | "done" | "error";
 
 interface Evaluation {
   readonly overallVerdict: string;
@@ -136,16 +136,27 @@ export function PracticeSession({
 
       const transcribedText = transcribeData.data.text;
       setTranscription(transcribedText);
+      setState("reviewing");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Something went wrong";
+      setError(message);
+      setState("error");
+    }
+  }
 
-      setState("evaluating");
+  async function submitForEvaluation() {
+    setState("evaluating");
+    setError(null);
 
+    try {
       const evaluateRes = await fetch("/api/evaluate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           questionId: question.id,
           interviewId,
-          transcription: transcribedText,
+          transcription,
           duration: elapsed,
         }),
       });
@@ -160,7 +171,7 @@ export function PracticeSession({
       setState("done");
     } catch (err: unknown) {
       const message =
-        err instanceof Error ? err.message : "Something went wrong";
+        err instanceof Error ? err.message : "Evaluation failed";
       setError(message);
       setState("error");
     }
@@ -224,6 +235,17 @@ export function PracticeSession({
               </p>
             )}
 
+            {state === "reviewing" && (
+              <div className="flex gap-2">
+                <Button onClick={submitForEvaluation} size="lg">
+                  Evaluate
+                </Button>
+                <Button onClick={reset} variant="outline" size="lg">
+                  Re-record
+                </Button>
+              </div>
+            )}
+
             {state === "evaluating" && (
               <p className="text-sm text-muted-foreground animate-pulse">
                 Evaluating your answer...
@@ -242,6 +264,25 @@ export function PracticeSession({
           )}
         </CardContent>
       </Card>
+
+      {state === "reviewing" && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm">Review Transcription</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-muted-foreground mb-2">
+              Fix any transcription errors before evaluating.
+            </p>
+            <textarea
+              value={transcription}
+              onChange={(e) => setTranscription(e.target.value)}
+              rows={8}
+              className="w-full rounded-md border bg-background px-3 py-2 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+          </CardContent>
+        </Card>
+      )}
 
       {state === "done" && evaluation && (
         <EvaluationResult

@@ -28,6 +28,13 @@ export async function POST(request: Request) {
       language: "en",
     });
 
+    if (!transcription.text || transcription.text.trim().length === 0) {
+      return Response.json(
+        { success: false, error: "No speech detected. Try speaking louder or longer." },
+        { status: 400 }
+      );
+    }
+
     return Response.json({
       success: true,
       data: { text: transcription.text },
