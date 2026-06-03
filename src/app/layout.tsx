@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${body.variable} ${display.variable} ${mono.variable} dark h-full antialiased`}
+      className={`${body.variable} ${display.variable} ${mono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <header className="border-b border-border/50">
