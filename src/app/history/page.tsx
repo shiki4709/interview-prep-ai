@@ -82,7 +82,7 @@ export default function HistoryPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
+          <h1 className="text-2xl font-heading font-semibold tracking-tight">
             Practice History
           </h1>
           <p className="text-muted-foreground mt-1">

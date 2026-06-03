@@ -43,17 +43,17 @@ export default function HomePage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Interviews</h1>
-          <p className="text-muted-foreground mt-1">
-            Practice with AI-generated questions tailored to each role.
+          <h1 className="text-2xl font-heading font-semibold tracking-tight">Interviews</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Paste a JD, practice with AI, get better.
           </p>
         </div>
         <div className="flex gap-2">
           <Link href="/history">
-            <Button variant="outline">History</Button>
+            <Button variant="outline" size="default" className="h-11 px-5">Past Sessions</Button>
           </Link>
           <Link href="/interviews/new">
-            <Button>New Interview</Button>
+            <Button size="default" className="h-11 px-5">New Interview</Button>
           </Link>
         </div>
       </div>
@@ -65,16 +65,17 @@ export default function HomePage() {
       )}
 
       {!loading && interviews.length === 0 && (
-        <Card className="border-dashed">
-          <CardContent className="py-12 text-center">
-            <p className="text-muted-foreground mb-4">
-              No interviews yet. Create one to get started.
-            </p>
-            <Link href="/interviews/new">
-              <Button variant="outline">Create Your First Interview</Button>
-            </Link>
-          </CardContent>
-        </Card>
+        <div className="border border-dashed border-border rounded-md px-6 py-10">
+          <p className="text-sm text-muted-foreground mb-1">
+            Nothing here yet.
+          </p>
+          <p className="text-sm text-muted-foreground mb-5">
+            Create your first interview to start practicing.
+          </p>
+          <Link href="/interviews/new">
+            <Button variant="outline" className="h-11 px-5">Create Interview</Button>
+          </Link>
+        </div>
       )}
 
       <div className="grid gap-4">

@@ -6,13 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 type InputMode = "text" | "link";
 
@@ -302,16 +295,7 @@ export function InterviewForm() {
   }
 
   return (
-    <Card className="max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle>New Interview</CardTitle>
-        <CardDescription>
-          Paste the job description and we'll generate tailored practice
-          questions. You can paste text or a link.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="companyName">Company Name</Label>
@@ -553,7 +537,5 @@ export function InterviewForm() {
             {isSubmitting ? "Creating..." : "Create Interview"}
           </Button>
         </form>
-      </CardContent>
-    </Card>
   );
 }
