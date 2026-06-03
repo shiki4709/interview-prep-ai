@@ -104,14 +104,12 @@ export default function InterviewDetailPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <Link
-          href="/"
-          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          &larr; All Interviews
-        </Link>
-      </div>
+      <Link
+        href="/"
+        className="inline-block font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase hover:text-foreground transition-colors"
+      >
+        &larr; Interviews
+      </Link>
 
       <div>
         <h1 className="text-3xl font-heading tracking-tight">

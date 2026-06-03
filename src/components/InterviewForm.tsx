@@ -296,32 +296,7 @@ export function InterviewForm() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="companyName">Company Name</Label>
-              <Input
-                id="companyName"
-                name="companyName"
-                placeholder="Acme Corp"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="roleName">Role Name</Label>
-              <Input
-                id="roleName"
-                name="roleName"
-                placeholder="Senior Product Manager"
-                value={roleName}
-                onChange={(e) => setRoleName(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          {/* Job Description — text or link */}
+          {/* Job Description — text or link (FIRST) */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="jobDescription">Job Description</Label>
@@ -434,6 +409,32 @@ export function InterviewForm() {
             )}
           </div>
 
+          {/* Company + Role side by side */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="companyName">Company Name</Label>
+              <Input
+                id="companyName"
+                name="companyName"
+                placeholder="Acme Corp"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="roleName">Role Name</Label>
+              <Input
+                id="roleName"
+                name="roleName"
+                placeholder="Senior Product Manager"
+                value={roleName}
+                onChange={(e) => setRoleName(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
           {/* Interviewer — LinkedIn URL */}
           <div className="space-y-2">
             <Label>
@@ -533,9 +534,14 @@ export function InterviewForm() {
 
           {error && <p className="text-sm text-destructive">{error}</p>}
 
-          <Button type="submit" disabled={isSubmitting} className="w-full h-11">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full h-11 rounded-lg text-sm font-medium text-white disabled:opacity-50 transition-opacity"
+            style={{ backgroundColor: "#1b2230" }}
+          >
             {isSubmitting ? "Creating..." : "Create interview & generate questions \u2192"}
-          </Button>
+          </button>
         </form>
   );
 }

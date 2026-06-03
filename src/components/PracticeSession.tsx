@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { EvaluationResult } from "./EvaluationResult";
 
 interface PracticeSessionProps {
@@ -187,62 +187,84 @@ export function PracticeSession({
 
   return (
     <div className="space-y-6">
+      {/* Question text */}
+      <h2 className="font-heading text-[1.5rem] leading-relaxed tracking-tight">
+        {question.question}
+      </h2>
+
+      {/* Intent / Testing */}
+      {question.intent && (
+        <p className="text-sm text-muted-foreground">
+          <span className="font-mono text-[11px] uppercase tracking-[0.2em]">Testing:</span>{" "}
+          {question.intent}
+        </p>
+      )}
+
+      {/* Recording section inside a card */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-xl font-heading leading-relaxed">
-            {question.question}
-          </CardTitle>
-          {question.intent && (
-            <p className="text-sm text-muted-foreground mt-2">
-              <span className="font-mono text-xs uppercase tracking-wider">Testing:</span>{" "}
-              {question.intent}
-            </p>
-          )}
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center gap-4">
+        <CardContent className="py-6 space-y-5">
+          <p className="text-sm font-medium border-b border-border pb-2">
+            Recording
+          </p>
+
+          <div className="flex flex-col items-center gap-4">
             {state === "idle" && (
-              <div className="flex items-center gap-4">
-                <Button onClick={startRecording} size="lg" className="rounded-full px-8">
-                  Record
-                </Button>
-                <span className="font-mono text-xs text-muted-foreground uppercase tracking-wider">
+              <>
+                <button
+                  onClick={startRecording}
+                  className="w-16 h-16 rounded-full bg-red-500 hover:bg-red-600 transition-colors flex items-center justify-center"
+                  aria-label="Start recording"
+                >
+                  <div className="w-5 h-5 rounded-full bg-white" />
+                </button>
+                <span className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.2em]">
                   Ready to record
                 </span>
-              </div>
-            )}
-
-            {state === "recording" && (
-              <div className="flex items-center gap-4">
-                <Button
-                  onClick={stopRecording}
-                  variant="destructive"
-                  size="lg"
-                  className="rounded-full px-8"
-                >
-                  Stop
-                </Button>
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2">
-                    <span className="relative flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500" />
-                    </span>
-                    <span
-                      className={`font-mono text-2xl tabular-nums ${getTimerColor(elapsed)}`}
-                    >
-                      {formatTime(elapsed)}
-                    </span>
-                  </div>
-                  <span className="font-mono text-xs text-muted-foreground">
+                <p className="text-sm text-muted-foreground text-center max-w-sm">
+                  Tap to start. Aim for two to three minutes &mdash; like the real thing.
+                </p>
+                <div className="flex flex-col items-center gap-1">
+                  <span className={`font-mono text-2xl tabular-nums ${getTimerColor(elapsed)}`}>
+                    {formatTime(elapsed)}
+                  </span>
+                  <span className="font-mono text-[10px] text-muted-foreground tracking-wider">
                     AMBER 2:30 &middot; RED 3:30
                   </span>
                 </div>
-              </div>
+              </>
+            )}
+
+            {state === "recording" && (
+              <>
+                <button
+                  onClick={stopRecording}
+                  className="w-16 h-16 rounded-full bg-red-500 hover:bg-red-600 transition-colors flex items-center justify-center"
+                  aria-label="Stop recording"
+                >
+                  <div className="w-5 h-5 rounded-sm bg-white" />
+                </button>
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500" />
+                  </span>
+                  <span className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.2em]">
+                    Recording
+                  </span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <span className={`font-mono text-2xl tabular-nums ${getTimerColor(elapsed)}`}>
+                    {formatTime(elapsed)}
+                  </span>
+                  <span className="font-mono text-[10px] text-muted-foreground tracking-wider">
+                    AMBER 2:30 &middot; RED 3:30
+                  </span>
+                </div>
+              </>
             )}
 
             {state === "transcribing" && (
-              <p className="text-sm text-muted-foreground animate-pulse">
+              <p className="text-sm text-muted-foreground animate-pulse py-4">
                 Transcribing your answer...
               </p>
             )}
@@ -259,7 +281,7 @@ export function PracticeSession({
             )}
 
             {state === "evaluating" && (
-              <p className="text-sm text-muted-foreground animate-pulse">
+              <p className="text-sm text-muted-foreground animate-pulse py-4">
                 Evaluating your answer...
               </p>
             )}
@@ -279,11 +301,9 @@ export function PracticeSession({
 
       {state === "reviewing" && (
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Review Transcription</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground mb-2">
+          <CardContent className="py-4 space-y-3">
+            <p className="text-sm font-medium">Review Transcription</p>
+            <p className="text-xs text-muted-foreground">
               Fix any transcription errors before evaluating.
             </p>
             <textarea

@@ -96,20 +96,20 @@ export default function PracticePage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <Link
-          href={`/interviews/${interviewId}`}
-          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          &larr; {interview.companyName} &mdash; {interview.roleName}
-        </Link>
-      </div>
+      {/* Back link in uppercase mono */}
+      <Link
+        href={`/interviews/${interviewId}`}
+        className="inline-block font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase hover:text-foreground transition-colors"
+      >
+        &larr; {interview.companyName} &middot; {interview.roleName}
+      </Link>
 
+      {/* Category badge + question counter */}
       <div className="flex items-center gap-3">
         <Badge variant="outline" className={getCategoryColor(question.category)}>
           {question.category}
         </Badge>
-        <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
+        <span className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.2em]">
           Question {questionIndex} of {interview.questions.length}
         </span>
       </div>

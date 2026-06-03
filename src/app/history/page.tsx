@@ -80,19 +80,17 @@ export default function HistoryPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-heading font-semibold tracking-tight">
-            Practice History
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            {sessions.length} session{sessions.length !== 1 ? "s" : ""} across{" "}
-            {companies.length} interview{companies.length !== 1 ? "s" : ""}
-          </p>
-        </div>
-        <Link href="/">
-          <Button variant="outline">Back to Interviews</Button>
-        </Link>
+      <div>
+        <p className="font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase mb-4">
+          Practice History
+        </p>
+        <h1 className="text-2xl font-heading tracking-tight">
+          History
+        </h1>
+        <p className="text-muted-foreground mt-1">
+          {sessions.length} session{sessions.length !== 1 ? "s" : ""} across{" "}
+          {companies.length} interview{companies.length !== 1 ? "s" : ""}
+        </p>
       </div>
 
       {/* Verdict summary */}
