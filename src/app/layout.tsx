@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Interview Prep AI",
+  title: "HappyPrep",
   description: "AI-powered interview practice with personalized questions and evaluation",
 };
 
@@ -30,8 +30,9 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <header className="border-b border-border">
           <div className="max-w-4xl mx-auto px-6 py-4">
-            <a href="/" className="text-lg font-semibold tracking-tight">
-              Interview Prep AI
+            <a href="/" className="text-lg font-semibold tracking-tight flex items-center gap-2">
+              <span className="text-xl">😊</span>
+              <span>HappyPrep</span>
             </a>
           </div>
         </header>

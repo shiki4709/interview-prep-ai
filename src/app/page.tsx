@@ -95,7 +95,7 @@ export default function HomePage() {
               <CardContent>
                 <span className="text-xs text-muted-foreground">
                   {interview.questionCount > 0
-                    ? `${interview.questionCount} questions`
+                    ? `${interview.questionCount} question${interview.questionCount !== 1 ? "s" : ""}`
                     : "No questions generated yet"}
                 </span>
               </CardContent>
