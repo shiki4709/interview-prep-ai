@@ -49,72 +49,124 @@
 }
 
 :root {
-  --background: #f8f7f4;
-  --foreground: #1b2230;
-  --card: #ffffff;
-  --card-foreground: #1b2230;
-  --popover: #ffffff;
-  --popover-foreground: #1b2230;
-  --primary: #1b2230;
-  --primary-foreground: #f8f7f4;
-  --secondary: #f0eeea;
-  --secondary-foreground: #1b2230;
-  --muted: #f0eeea;
-  --muted-foreground: #8a8780;
-  --accent: #f0eeea;
-  --accent-foreground: #1b2230;
-  --destructive: #dc3545;
-  --border: #e8e5e0;
-  --input: #e8e5e0;
-  --ring: #1b2230;
-  --chart-1: #1b2230;
-  --chart-2: #8a8780;
-  --chart-3: #b0ada8;
-  --chart-4: #d4d1cc;
-  --chart-5: #f0eeea;
-  --radius: 0.375rem;
-  --sidebar: #f8f7f4;
-  --sidebar-foreground: #1b2230;
-  --sidebar-primary: #1b2230;
-  --sidebar-primary-foreground: #f8f7f4;
-  --sidebar-accent: #f0eeea;
-  --sidebar-accent-foreground: #1b2230;
-  --sidebar-border: #e8e5e0;
-  --sidebar-ring: #1b2230;
+  /* === Core surfaces === */
+  --background: oklch(0.972 0.003 255);
+  --foreground: oklch(0.27 0.013 262);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.27 0.013 262);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.27 0.013 262);
+
+  /* === Primary === */
+  --primary: oklch(0.225 0.013 262);
+  --primary-foreground: oklch(0.99 0 0);
+
+  /* === Secondary / Muted / Accent === */
+  --secondary: oklch(0.963 0.004 255);
+  --secondary-foreground: oklch(0.27 0.013 262);
+  --muted: oklch(0.963 0.004 255);
+  --muted-foreground: oklch(0.505 0.012 262);
+  --accent: oklch(0.963 0.004 255);
+  --accent-foreground: oklch(0.27 0.013 262);
+
+  /* === Destructive === */
+  --destructive: oklch(0.58 0.20 25);
+
+  /* === Border / Input / Ring === */
+  --border: oklch(0.915 0.004 255);
+  --input: oklch(0.855 0.006 255);
+  --ring: oklch(0.55 0.16 256);
+
+  /* === Radius === */
+  --radius: 0.5rem;
+
+  /* === Chart === */
+  --chart-1: oklch(0.225 0.013 262);
+  --chart-2: oklch(0.505 0.012 262);
+  --chart-3: oklch(0.635 0.010 262);
+  --chart-4: oklch(0.855 0.006 255);
+  --chart-5: oklch(0.963 0.004 255);
+
+  /* === Sidebar === */
+  --sidebar: oklch(0.995 0.001 255);
+  --sidebar-foreground: oklch(0.27 0.013 262);
+  --sidebar-primary: oklch(0.225 0.013 262);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.963 0.004 255);
+  --sidebar-accent-foreground: oklch(0.27 0.013 262);
+  --sidebar-border: oklch(0.915 0.004 255);
+  --sidebar-ring: oklch(0.55 0.16 256);
+
+  /* === Design system extensions === */
+  --text-2: oklch(0.505 0.012 262);
+  --text-3: oklch(0.635 0.010 262);
+  --chrome: oklch(0.255 0.020 256);
+  --chrome-2: oklch(0.31 0.022 256);
+  --chrome-text: oklch(0.94 0.005 255);
+  --chrome-text-2: oklch(0.72 0.012 255);
+  --border-2: oklch(0.855 0.006 255);
+  --signal-accent: oklch(0.55 0.16 256);
+  --dot: oklch(0.90 0.004 255);
+
+  /* === Pastel tag system === */
+  --t-blue-bg: oklch(0.95 0.035 255);
+  --t-blue-fg: oklch(0.50 0.16 262);
+  --t-green-bg: oklch(0.95 0.045 158);
+  --t-green-fg: oklch(0.46 0.12 158);
+  --t-amber-bg: oklch(0.955 0.05 80);
+  --t-amber-fg: oklch(0.55 0.12 62);
+  --t-purple-bg: oklch(0.95 0.035 300);
+  --t-purple-fg: oklch(0.52 0.17 300);
+  --t-red-bg: oklch(0.955 0.03 22);
+  --t-red-fg: oklch(0.55 0.19 24);
 }
 
 .dark {
-  --background: #f8f7f4;
-  --foreground: #1b2230;
-  --card: #ffffff;
-  --card-foreground: #1b2230;
-  --popover: #ffffff;
-  --popover-foreground: #1b2230;
-  --primary: #1b2230;
-  --primary-foreground: #f8f7f4;
-  --secondary: #f0eeea;
-  --secondary-foreground: #1b2230;
-  --muted: #f0eeea;
-  --muted-foreground: #8a8780;
-  --accent: #f0eeea;
-  --accent-foreground: #1b2230;
-  --destructive: #dc3545;
-  --border: #e8e5e0;
-  --input: #e8e5e0;
-  --ring: #1b2230;
-  --chart-1: #1b2230;
-  --chart-2: #8a8780;
-  --chart-3: #e8e5e0;
-  --chart-4: #f0eeea;
-  --chart-5: #f8f7f4;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #1b2230;
-  --sidebar-primary: #1b2230;
-  --sidebar-primary-foreground: #f8f7f4;
-  --sidebar-accent: #f0eeea;
-  --sidebar-accent-foreground: #1b2230;
-  --sidebar-border: #e8e5e0;
-  --sidebar-ring: #1b2230;
+  --background: oklch(0.165 0 0);
+  --foreground: oklch(0.96 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.96 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.96 0 0);
+  --primary: oklch(0.97 0 0);
+  --primary-foreground: oklch(0.17 0 0);
+  --secondary: oklch(0.245 0 0);
+  --secondary-foreground: oklch(0.96 0 0);
+  --muted: oklch(0.245 0 0);
+  --muted-foreground: oklch(0.54 0 0);
+  --accent: oklch(0.245 0 0);
+  --accent-foreground: oklch(0.96 0 0);
+  --destructive: oklch(0.58 0.20 25);
+  --border: oklch(1 0 0 / 0.10);
+  --input: oklch(1 0 0 / 0.20);
+  --ring: oklch(0.72 0.13 255);
+  --sidebar: oklch(0.155 0 0);
+  --sidebar-foreground: oklch(0.96 0 0);
+  --sidebar-primary: oklch(0.97 0 0);
+  --sidebar-primary-foreground: oklch(0.17 0 0);
+  --sidebar-accent: oklch(0.245 0 0);
+  --sidebar-accent-foreground: oklch(0.96 0 0);
+  --sidebar-border: oklch(1 0 0 / 0.10);
+  --sidebar-ring: oklch(0.72 0.13 255);
+  --text-2: oklch(0.72 0 0);
+  --text-3: oklch(0.54 0 0);
+  --chrome: oklch(0.13 0 0);
+  --chrome-2: oklch(0.20 0 0);
+  --chrome-text: oklch(0.93 0 0);
+  --chrome-text-2: oklch(0.62 0 0);
+  --border-2: oklch(1 0 0 / 0.20);
+  --signal-accent: oklch(0.72 0.13 255);
+  --dot: oklch(0.255 0 0);
+  --t-blue-bg: oklch(0.32 0.05 255);
+  --t-blue-fg: oklch(0.82 0.10 262);
+  --t-green-bg: oklch(0.31 0.05 158);
+  --t-green-fg: oklch(0.82 0.11 158);
+  --t-amber-bg: oklch(0.33 0.05 70);
+  --t-amber-fg: oklch(0.84 0.10 78);
+  --t-purple-bg: oklch(0.32 0.05 300);
+  --t-purple-fg: oklch(0.83 0.10 300);
+  --t-red-bg: oklch(0.32 0.06 22);
+  --t-red-fg: oklch(0.80 0.13 24);
 }
 
 @layer base {
@@ -126,5 +178,283 @@
   }
   html {
     @apply font-sans;
+  }
+  ::selection {
+    background: var(--t-blue-bg);
+    color: var(--t-blue-fg);
+  }
+}
+
+/* ================================================================
+   DESIGN SYSTEM — Utility classes from design handoff
+   ================================================================ */
+
+/* --- Typography --- */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.04;
+  color: var(--foreground);
+}
+.display .dim {
+  color: var(--text-3);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.slabel {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--foreground);
+  display: inline-block;
+  border-bottom: 1.5px solid var(--foreground);
+  padding-bottom: 4px;
+}
+
+.field-note {
+  font-size: 12.5px;
+  color: var(--text-3);
+}
+
+/* --- Tag / Pill system --- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--accent);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.tag .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.tag-blue { background: var(--t-blue-bg); color: var(--t-blue-fg); }
+.tag-green { background: var(--t-green-bg); color: var(--t-green-fg); }
+.tag-amber { background: var(--t-amber-bg); color: var(--t-amber-fg); }
+.tag-purple { background: var(--t-purple-bg); color: var(--t-purple-fg); }
+.tag-red { background: var(--t-red-bg); color: var(--t-red-fg); }
+
+/* --- Stat line --- */
+.stat-line {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--text-3);
+  margin: 24px 0 14px;
+}
+
+/* --- Dotted grid content background --- */
+.dotted-grid {
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* --- Interview list cards --- */
+.irow {
+  display: grid;
+  grid-template-columns: 26px 1fr auto;
+  align-items: center;
+  gap: 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.13s, box-shadow 0.13s;
+}
+.irow:hover {
+  border-color: var(--border-2);
+  box-shadow: 0 2px 12px oklch(0 0 0 / 0.05);
+}
+
+/* --- Page head --- */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 8px;
+}
+
+/* --- Back link --- */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  text-decoration: none;
+  margin-bottom: 22px;
+  transition: color 0.12s;
+  cursor: pointer;
+}
+.back-link:hover {
+  color: var(--foreground);
+}
+
+/* --- Buttons matching design --- */
+.btn-design {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 15px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition: background 0.13s, border-color 0.13s, box-shadow 0.13s;
+  white-space: nowrap;
+}
+.btn-design-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 600;
+}
+.btn-design-primary:hover {
+  background: oklch(0.32 0.015 262);
+}
+.btn-design-ghost {
+  background: var(--card);
+  color: var(--foreground);
+  border-color: var(--border-2);
+}
+.btn-design-ghost:hover {
+  background: var(--accent);
+}
+
+/* --- Verdict ladder --- */
+.ladder {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 18px;
+  max-width: 460px;
+}
+.ladder .step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.ladder .bar {
+  height: 5px;
+  border-radius: 3px;
+  background: var(--accent);
+}
+.ladder .step span {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.ladder .step.on .bar {
+  background: var(--t-blue-fg);
+}
+.ladder .step.on span {
+  color: var(--foreground);
+}
+
+/* --- Stat pills --- */
+.stat-pill {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: var(--text-2);
+  background: var(--accent);
+  border: 1px solid var(--border);
+  padding: 6px 11px;
+  border-radius: 100px;
+}
+.stat-pill b {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+/* --- Feedback grid --- */
+.fb-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* --- Filler word highlighting --- */
+.filler {
+  background: var(--t-amber-bg);
+  color: var(--t-amber-fg);
+  border-radius: 3px;
+  padding: 0 3px;
+  transition: background 0.2s, color 0.2s, opacity 0.2s;
+}
+.cleaned .filler {
+  background: transparent;
+  color: var(--text-3);
+  opacity: 0.45;
+  text-decoration: line-through;
+  text-decoration-color: var(--t-amber-fg);
+}
+
+/* --- Filter chips --- */
+.chip {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 13px;
+  border-radius: 100px;
+  border: 1px solid var(--border-2);
+  color: var(--text-2);
+  cursor: pointer;
+  background: var(--card);
+  transition: all 0.12s;
+}
+.chip:hover {
+  background: var(--accent);
+}
+.chip.active {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: transparent;
+}
+
+/* --- Panel --- */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.panel-pad {
+  padding: 24px 26px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 760px) {
+  .fb-grid {
+    grid-template-columns: 1fr;
+  }
+  .irow {
+    grid-template-columns: 1fr;
   }
 }

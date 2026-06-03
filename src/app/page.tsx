@@ -12,6 +12,17 @@ interface InterviewSummary {
   readonly questionCount: number;
 }
 
+const TAG_COLORS = ["tag-blue", "tag-green", "tag-purple", "tag-amber"] as const;
+
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 export default function HomePage() {
   const [interviews, setInterviews] = useState<readonly InterviewSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,92 +42,153 @@ export default function HomePage() {
     load();
   }, []);
 
-  const totalQuestions = interviews.reduce((sum, i) => sum + i.questionCount, 0);
+  const totalQuestions = interviews.reduce(
+    (sum, i) => sum + i.questionCount,
+    0
+  );
 
   return (
-    <div className="space-y-8">
-      {/* Section label */}
-      <p className="font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase">
-        Practice Room
-      </p>
-
-      {/* Hero heading */}
-      <div className="space-y-4">
-        <h1 className="text-[3rem] leading-[1.1] tracking-tight">
-          <span className="font-heading">Interviews,</span>{" "}
-          <em className="font-heading text-muted-foreground">ready when you are.</em>
-        </h1>
-
-        <div className="flex items-start justify-between gap-6">
-          <p className="text-sm text-muted-foreground max-w-lg leading-relaxed">
-            Paste a job description, get tailored questions, and rehearse out loud
-            until the answers feel like yours.
-          </p>
-          <Link
-            href="/interviews/new"
-            className="shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium text-white"
-            style={{ backgroundColor: "#1b2230" }}
+    <div>
+      {/* Page head */}
+      <div className="page-head">
+        <div>
+          <div className="eyebrow" style={{ marginBottom: 14 }}>
+            Practice room
+          </div>
+          <h1 className="display" style={{ fontSize: 42 }}>
+            Interviews<span className="dim">, ready when you are.</span>
+          </h1>
+          <p
+            style={{
+              color: "var(--text-2)",
+              fontSize: 14,
+              marginTop: 10,
+              maxWidth: "48ch",
+            }}
           >
-            + New interview
-          </Link>
+            Paste a job description, get tailored questions, and rehearse out
+            loud until the answers feel like yours.
+          </p>
         </div>
+        <Link href="/interviews/new" className="btn-design btn-design-primary">
+          + New interview
+        </Link>
       </div>
 
-      {/* Stats */}
+      {/* Stat line */}
       {!loading && interviews.length > 0 && (
-        <p className="font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase">
-          {interviews.length} interview{interviews.length !== 1 ? "s" : ""} &middot; {totalQuestions} question{totalQuestions !== 1 ? "s" : ""}
-        </p>
+        <div className="stat-line">
+          {interviews.length} INTERVIEW{interviews.length !== 1 ? "S" : ""}{" "}
+          &middot; {totalQuestions} QUESTION
+          {totalQuestions !== 1 ? "S" : ""}
+        </div>
       )}
 
       {/* Loading */}
       {loading && (
-        <p className="text-sm text-muted-foreground animate-pulse">
+        <p
+          style={{
+            fontSize: 14,
+            color: "var(--text-3)",
+            marginTop: 32,
+          }}
+          className="animate-pulse"
+        >
           Loading...
         </p>
       )}
 
       {/* Empty state */}
       {!loading && interviews.length === 0 && (
-        <div className="border border-dashed border-border rounded-lg px-6 py-10">
-          <p className="text-sm text-muted-foreground mb-1">
+        <div
+          style={{
+            border: "1px dashed var(--border)",
+            borderRadius: 12,
+            padding: "40px 24px",
+            marginTop: 32,
+          }}
+        >
+          <p style={{ fontSize: 14, color: "var(--text-2)", marginBottom: 4 }}>
             Nothing here yet.
           </p>
-          <p className="text-sm text-muted-foreground mb-5">
+          <p style={{ fontSize: 14, color: "var(--text-3)", marginBottom: 20 }}>
             Create your first interview to start practicing.
           </p>
           <Link
             href="/interviews/new"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium border border-border hover:bg-accent transition-colors"
+            className="btn-design btn-design-ghost"
           >
             Create Interview
           </Link>
         </div>
       )}
 
-      {/* Interview cards */}
-      <div className="grid gap-3">
+      {/* Interview list */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {interviews.map((interview, index) => (
-          <Link key={interview.id} href={`/interviews/${interview.id}`}>
-            <div className="flex items-center gap-5 px-5 py-4 bg-card border border-border rounded-lg hover:border-foreground/20 transition-colors cursor-pointer">
-              <span className="font-mono text-sm text-muted-foreground w-6 shrink-0">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <div className="flex-1 min-w-0">
-                <p className="font-heading text-base tracking-tight">
-                  {interview.companyName}
-                </p>
-                <p className="text-sm text-muted-foreground">{interview.roleName}</p>
+          <Link
+            key={interview.id}
+            href={`/interviews/${interview.id}`}
+            className="irow"
+          >
+            {/* Index */}
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 12,
+                color: "var(--text-3)",
+              }}
+            >
+              {String(index + 1).padStart(2, "0")}
+            </span>
+
+            {/* Company + Role */}
+            <div>
+              <div
+                className="display"
+                style={{ fontSize: 22, lineHeight: 1.05 }}
+              >
+                {interview.companyName}
               </div>
+              <div
+                style={{
+                  color: "var(--text-2)",
+                  fontSize: 13,
+                  marginTop: 4,
+                }}
+              >
+                {interview.roleName}
+              </div>
+            </div>
+
+            {/* Meta cluster: pill + date + arrow */}
+            <div className="flex items-center" style={{ gap: 14 }}>
               {interview.questionCount > 0 && (
-                <span className="text-xs font-mono px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  {interview.questionCount} question{interview.questionCount !== 1 ? "s" : ""}
+                <span
+                  className={`tag ${TAG_COLORS[index % TAG_COLORS.length]}`}
+                >
+                  {interview.questionCount} question
+                  {interview.questionCount !== 1 ? "s" : ""}
                 </span>
               )}
-              <span className="font-mono text-xs text-muted-foreground">
-                {new Date(interview.createdAt).toLocaleDateString()}
+              <span
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 11.5,
+                  color: "var(--text-3)",
+                }}
+              >
+                {formatDate(interview.createdAt)}
               </span>
-              <span className="text-muted-foreground">&rarr;</span>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 15,
+                  color: "var(--text-3)",
+                }}
+              >
+                &rarr;
+              </span>
             </div>
           </Link>
         ))}

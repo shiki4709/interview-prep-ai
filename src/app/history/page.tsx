@@ -48,6 +48,7 @@ export default function HistoryPage() {
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<number | null>(null);
   const [filter, setFilter] = useState<string>("all");
+  const [deleting, setDeleting] = useState<number | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -72,6 +73,23 @@ export default function HistoryPage() {
     filter === "all"
       ? sessions
       : sessions.filter((s) => s.companyName === filter);
+
+  async function handleDelete(sessionId: number) {
+    if (deleting) return;
+    setDeleting(sessionId);
+    try {
+      const res = await fetch(`/api/sessions/${sessionId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSessions((prev) => prev.filter((s) => s.id !== sessionId));
+        if (expanded === sessionId) setExpanded(null);
+      }
+    } finally {
+      setDeleting(null);
+    }
+  }
 
   const verdictCounts = sessions.reduce<Record<string, number>>((acc, s) => {
     const v = s.overallVerdict ?? "Unrated";
@@ -250,7 +268,7 @@ export default function HistoryPage() {
                     evaluation={evaluation}
                     transcription={session.transcription ?? ""}
                   />
-                  <div className="mt-3">
+                  <div className="mt-3 flex items-center gap-2">
                     <Link
                       href={`/interviews/${session.interviewId}/practice?questionId=${session.questionId}`}
                     >
@@ -258,6 +276,15 @@ export default function HistoryPage() {
                         Practice Again
                       </Button>
                     </Link>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/30"
+                      disabled={deleting === session.id}
+                      onClick={() => handleDelete(session.id)}
+                    >
+                      {deleting === session.id ? "Deleting..." : "Delete"}
+                    </Button>
                   </div>
                 </div>
               )}
