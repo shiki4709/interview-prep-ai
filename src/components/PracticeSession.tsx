@@ -189,44 +189,56 @@ export function PracticeSession({
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg leading-relaxed">
+          <CardTitle className="text-xl font-heading leading-relaxed">
             {question.question}
           </CardTitle>
           {question.intent && (
-            <p className="text-sm text-muted-foreground mt-1">
-              Intent: {question.intent}
+            <p className="text-sm text-muted-foreground mt-2">
+              <span className="font-mono text-xs uppercase tracking-wider">Testing:</span>{" "}
+              {question.intent}
             </p>
           )}
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <div className="flex items-center gap-4">
             {state === "idle" && (
-              <Button onClick={startRecording} size="lg">
-                Start Recording
-              </Button>
+              <div className="flex items-center gap-4">
+                <Button onClick={startRecording} size="lg" className="rounded-full px-8">
+                  Record
+                </Button>
+                <span className="font-mono text-xs text-muted-foreground uppercase tracking-wider">
+                  Ready to record
+                </span>
+              </div>
             )}
 
             {state === "recording" && (
-              <>
+              <div className="flex items-center gap-4">
                 <Button
                   onClick={stopRecording}
                   variant="destructive"
                   size="lg"
+                  className="rounded-full px-8"
                 >
-                  Stop Recording
+                  Stop
                 </Button>
-                <div className="flex items-center gap-2">
-                  <span className="relative flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500" />
-                  </span>
-                  <span
-                    className={`font-mono text-lg tabular-nums ${getTimerColor(elapsed)}`}
-                  >
-                    {formatTime(elapsed)}
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <span className="relative flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500" />
+                    </span>
+                    <span
+                      className={`font-mono text-2xl tabular-nums ${getTimerColor(elapsed)}`}
+                    >
+                      {formatTime(elapsed)}
+                    </span>
+                  </div>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    AMBER 2:30 &middot; RED 3:30
                   </span>
                 </div>
-              </>
+              </div>
             )}
 
             {state === "transcribing" && (

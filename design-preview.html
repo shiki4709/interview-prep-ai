@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HappyPrep — Design Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --background: oklch(0.16 0.005 240);
+      --foreground: oklch(0.90 0.01 240);
+      --card: oklch(0.20 0.008 240);
+      --card-foreground: oklch(0.90 0.01 240);
+      --primary: oklch(0.72 0.10 185);
+      --primary-foreground: oklch(0.15 0.02 185);
+      --secondary: oklch(0.24 0.008 240);
+      --secondary-foreground: oklch(0.90 0.01 240);
+      --muted: oklch(0.24 0.008 240);
+      --muted-foreground: oklch(0.65 0.015 240);
+      --accent: oklch(0.24 0.012 240);
+      --accent-foreground: oklch(0.90 0.01 240);
+      --destructive: oklch(0.704 0.191 22.216);
+      --border: oklch(1 0.01 240 / 12%);
+      --input: oklch(1 0.01 240 / 15%);
+      --ring: oklch(0.70 0.08 175);
+      --radius: 0.375rem;
+      --font-sans: 'DM Sans', sans-serif;
+      --font-display: 'Instrument Serif', serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--background);
+      color: var(--foreground);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    /* ===== LAYOUT ===== */
+    .container { max-width: 768px; margin: 0 auto; padding: 0 24px; }
+
+    /* ===== HEADER ===== */
+    header {
+      border-bottom: 1px solid var(--border);
+    }
+    header .container { padding-top: 12px; padding-bottom: 12px; }
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--foreground);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    /* ===== MAIN ===== */
+    main { padding: 32px 0; }
+    main .container { display: flex; flex-direction: column; gap: 32px; }
+
+    /* ===== PAGE HEADER ===== */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+    }
+    .page-header p {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+      margin-top: 2px;
+    }
+    .page-actions { display: flex; gap: 8px; }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 44px;
+      padding: 0 20px;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      font-weight: 500;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: none;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-outline {
+      background: transparent;
+      color: var(--foreground);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { background: var(--muted); }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: var(--card);
+      border-radius: calc(var(--radius) * 2);
+      padding: 16px;
+      border: 1px solid var(--border);
+      transition: background 0.15s ease;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+    .card:hover { background: var(--accent); }
+    .card-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 400;
+    }
+    .card-meta {
+      font-size: 0.75rem;
+      color: var(--muted-foreground);
+    }
+    .card-subtitle {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+      margin-top: 4px;
+    }
+    .card-footer {
+      font-size: 0.75rem;
+      color: var(--muted-foreground);
+      margin-top: 12px;
+    }
+
+    /* ===== INTERVIEW LIST ===== */
+    .interview-list { display: flex; flex-direction: column; gap: 8px; }
+
+    /* ===== FORM PAGE ===== */
+    .form-section { display: flex; flex-direction: column; gap: 24px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .form-group .optional {
+      font-weight: 400;
+      color: var(--muted-foreground);
+    }
+    input, textarea {
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font-size: 0.875rem;
+      font-family: var(--font-sans);
+      color: var(--foreground);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    input:focus, textarea:focus {
+      border-color: var(--ring);
+    }
+    input::placeholder, textarea::placeholder {
+      color: var(--muted-foreground);
+    }
+    textarea { resize: vertical; min-height: 100px; }
+
+    .mode-toggle {
+      display: flex;
+      gap: 2px;
+    }
+    .mode-btn {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: all 0.15s;
+    }
+    .mode-btn.active {
+      background: var(--foreground);
+      color: var(--background);
+    }
+    .mode-btn:not(.active) {
+      background: transparent;
+      color: var(--muted-foreground);
+    }
+
+    .fetch-row {
+      display: flex;
+      gap: 8px;
+    }
+    .fetch-row input { flex: 1; }
+    .btn-sm {
+      height: 36px;
+      padding: 0 12px;
+      font-size: 0.75rem;
+    }
+
+    /* ===== QUESTION LIST ===== */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .section-header h2 {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: var(--radius);
+      font-size: 0.7rem;
+      font-weight: 500;
+      border: 1px solid;
+    }
+    .badge-behavioral { background: oklch(0.55 0.15 250 / 15%); color: oklch(0.70 0.12 250); border-color: oklch(0.55 0.15 250 / 30%); }
+    .badge-technical { background: oklch(0.55 0.15 155 / 15%); color: oklch(0.70 0.12 155); border-color: oklch(0.55 0.15 155 / 30%); }
+    .badge-situational { background: oklch(0.60 0.15 85 / 15%); color: oklch(0.75 0.12 85); border-color: oklch(0.60 0.15 85 / 30%); }
+    .badge-role-specific { background: oklch(0.55 0.15 310 / 15%); color: oklch(0.70 0.12 310); border-color: oklch(0.55 0.15 310 / 30%); }
+
+    .question-card {
+      background: var(--card);
+      border-radius: calc(var(--radius) * 2);
+      padding: 16px;
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .question-card p {
+      font-size: 0.875rem;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+    .question-card .intent {
+      font-size: 0.75rem;
+      color: var(--muted-foreground);
+      margin-top: 6px;
+      font-weight: 400;
+    }
+
+    /* ===== PRACTICE SESSION ===== */
+    .practice-question {
+      background: var(--card);
+      border-radius: calc(var(--radius) * 2);
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+    .practice-question h2 {
+      font-size: 1.125rem;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+    .practice-question .intent {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+      margin-top: 6px;
+    }
+    .practice-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .timer {
+      font-family: var(--font-mono);
+      font-size: 1.125rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .recording-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: oklch(0.65 0.20 25);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    .btn-destructive {
+      background: var(--destructive);
+      color: white;
+    }
+
+    /* ===== EVALUATION ===== */
+    .verdict {
+      display: inline-flex;
+      padding: 4px 12px;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: 1px solid;
+    }
+    .verdict-solid { background: oklch(0.55 0.15 250 / 15%); color: oklch(0.70 0.12 250); border-color: oklch(0.55 0.15 250 / 30%); }
+    .verdict-outstanding { background: oklch(0.55 0.15 155 / 15%); color: oklch(0.70 0.12 155); border-color: oklch(0.55 0.15 155 / 30%); }
+
+    .feedback-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .feedback-card {
+      background: var(--card);
+      border-radius: calc(var(--radius) * 2);
+      padding: 16px;
+      border: 1px solid var(--border);
+    }
+    .feedback-card h3 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .feedback-card.strengths h3 { color: oklch(0.70 0.12 155); }
+    .feedback-card.improvements h3 { color: oklch(0.75 0.12 85); }
+    .feedback-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .feedback-card li {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+      display: flex;
+      gap: 8px;
+    }
+    .feedback-card li span { flex-shrink: 0; margin-top: 2px; }
+
+    /* ===== DIVIDER ===== */
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 8px 0;
+    }
+
+    /* ===== BACK LINK ===== */
+    .back-link {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--foreground); }
+
+    /* ===== PAGES ===== */
+    .page { display: none; }
+    .page.active { display: block; }
+    .page-nav {
+      display: flex;
+      gap: 8px;
+      padding: 12px 24px;
+      background: var(--secondary);
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      justify-content: center;
+      z-index: 100;
+      border-top: 1px solid var(--border);
+    }
+    .page-nav button {
+      font-size: 0.75rem;
+      padding: 6px 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--foreground);
+      cursor: pointer;
+      font-family: var(--font-sans);
+    }
+    .page-nav button.active { background: var(--primary); color: var(--primary-foreground); border-color: transparent; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="container">
+    <a href="#" class="logo">HappyPrep</a>
+  </div>
+</header>
+
+<!-- PAGE 1: HOME -->
+<div class="page active" id="page-home">
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <div>
+          <h1>Interviews</h1>
+          <p>Paste a JD, practice with AI, get better.</p>
+        </div>
+        <div class="page-actions">
+          <a href="#" class="btn btn-outline">Past Sessions</a>
+          <a href="#" class="btn btn-primary" onclick="showPage('page-form')">New Interview</a>
+        </div>
+      </div>
+
+      <div class="interview-list">
+        <a href="#" class="card" onclick="showPage('page-detail')">
+          <div class="card-row">
+            <span class="card-title">Supabase</span>
+            <span class="card-meta">6/2/2026</span>
+          </div>
+          <div class="card-subtitle">Developer Relations Engineer</div>
+          <div class="card-footer">10 questions</div>
+        </a>
+        <a href="#" class="card">
+          <div class="card-row">
+            <span class="card-title">HappyRobot</span>
+            <span class="card-meta">6/1/2026</span>
+          </div>
+          <div class="card-subtitle">Data Scientist</div>
+          <div class="card-footer">8 questions</div>
+        </a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- PAGE 2: NEW INTERVIEW FORM -->
+<div class="page" id="page-form">
+  <main>
+    <div class="container">
+      <div>
+        <h1 style="font-family: var(--font-display); font-size: 1.75rem; letter-spacing: -0.02em;">New Interview</h1>
+        <p style="font-size: 0.875rem; color: var(--muted-foreground); margin-top: 4px;">Add the role details and we'll generate custom practice questions.</p>
+      </div>
+
+      <form class="form-section">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Company Name</label>
+            <input type="text" placeholder="Acme Corp">
+          </div>
+          <div class="form-group">
+            <label>Role Name</label>
+            <input type="text" placeholder="Senior Product Manager">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label>Job Description</label>
+            <div class="mode-toggle">
+              <button type="button" class="mode-btn active">Text</button>
+              <button type="button" class="mode-btn">Link</button>
+            </div>
+          </div>
+          <textarea placeholder="Paste the full job description here (or paste a link to auto-fetch)..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Interviewer LinkedIn <span class="optional">(optional)</span></label>
+          <div class="fetch-row">
+            <input type="text" placeholder="https://linkedin.com/in/jane-smith">
+            <button type="button" class="btn btn-outline btn-sm">Fetch</button>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" style="width: 100%;">Create Interview</button>
+      </form>
+    </div>
+  </main>
+</div>
+
+<!-- PAGE 3: INTERVIEW DETAIL -->
+<div class="page" id="page-detail">
+  <main>
+    <div class="container">
+      <a href="#" class="back-link" onclick="showPage('page-home')">&larr; All Interviews</a>
+
+      <div>
+        <h1 style="font-family: var(--font-display); font-size: 1.75rem; letter-spacing: -0.02em;">Supabase</h1>
+        <p style="color: var(--muted-foreground); margin-top: 2px;">Developer Relations Engineer</p>
+        <p style="font-size: 0.875rem; color: var(--muted-foreground); margin-top: 8px;">Interviewer: Thor Schaeff</p>
+      </div>
+
+      <hr>
+
+      <div>
+        <div class="section-header">
+          <h2>Questions</h2>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <!-- Behavioral -->
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <span class="badge badge-behavioral">behavioral</span>
+              <span class="card-meta">3 questions</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div class="question-card">
+                <div>
+                  <p>Can you describe a time when you successfully engaged a developer community and what strategies you used?</p>
+                  <div class="intent">Intent: To assess the candidate's experience in engaging with and growing a developer community.</div>
+                </div>
+                <a href="#" class="btn btn-outline btn-sm" onclick="showPage('page-practice')">Practice</a>
+              </div>
+              <div class="question-card">
+                <div>
+                  <p>Tell us about a time when you had to collaborate with cross-functional teams. What was your role and the outcome?</p>
+                  <div class="intent">Intent: To evaluate the candidate's experience in cross-functional collaboration.</div>
+                </div>
+                <a href="#" class="btn btn-outline btn-sm">Practice</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Technical -->
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <span class="badge badge-technical">technical</span>
+              <span class="card-meta">2 questions</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div class="question-card">
+                <div>
+                  <p>How would you explain Supabase to a developer unfamiliar with it, and what are its key advantages over similar platforms?</p>
+                  <div class="intent">Intent: To evaluate understanding of Supabase and ability to communicate its value proposition.</div>
+                </div>
+                <a href="#" class="btn btn-outline btn-sm">Practice</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- PAGE 4: PRACTICE SESSION -->
+<div class="page" id="page-practice">
+  <main>
+    <div class="container">
+      <a href="#" class="back-link" onclick="showPage('page-detail')">&larr; Supabase &mdash; Developer Relations Engineer</a>
+
+      <div>
+        <h1 style="font-family: var(--font-display); font-size: 1.75rem; letter-spacing: -0.02em;">Practice Session</h1>
+        <p style="font-size: 0.875rem; color: var(--muted-foreground); margin-top: 4px;">Record your answer, then get AI feedback.</p>
+      </div>
+
+      <div class="practice-question">
+        <h2>Can you describe a time when you successfully engaged a developer community and what strategies you used?</h2>
+        <div class="intent">Intent: To assess the candidate's experience in engaging with and growing a developer community.</div>
+        <div class="practice-controls">
+          <button class="btn btn-destructive">Stop Recording</button>
+          <div class="timer">
+            <span class="recording-dot"></span>
+            <span>1:42</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Evaluation Results -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <span class="verdict verdict-solid">Solid</span>
+
+        <div class="feedback-card">
+          <h3>Overall Feedback</h3>
+          <p style="font-size: 0.875rem; color: var(--muted-foreground); line-height: 1.6;">Your answer demonstrated strong experience with developer communities. The STAR structure was clear, and your metrics were specific. Consider tightening the situation setup to leave more time for the results.</p>
+        </div>
+
+        <div class="feedback-grid">
+          <div class="feedback-card strengths">
+            <h3>Strengths</h3>
+            <ul>
+              <li><span style="color: oklch(0.70 0.12 155);">+</span> Specific metrics (3x community growth)</li>
+              <li><span style="color: oklch(0.70 0.12 155);">+</span> Clear STAR structure</li>
+              <li><span style="color: oklch(0.70 0.12 155);">+</span> Connected actions to outcomes</li>
+            </ul>
+          </div>
+          <div class="feedback-card improvements">
+            <h3>Improvements</h3>
+            <ul>
+              <li><span style="color: oklch(0.75 0.12 85);">-</span> Situation setup was too long (45s)</li>
+              <li><span style="color: oklch(0.75 0.12 85);">-</span> Missing: what you learned</li>
+              <li><span style="color: oklch(0.75 0.12 85);">-</span> Could mention scale of impact</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- PAGE NAVIGATION -->
+<div class="page-nav">
+  <button class="active" onclick="showPage('page-home')">Home</button>
+  <button onclick="showPage('page-form')">New Interview</button>
+  <button onclick="showPage('page-detail')">Questions</button>
+  <button onclick="showPage('page-practice')">Practice</button>
+</div>
+
+<script>
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.page-nav button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>

@@ -20,10 +20,10 @@ interface QuestionListProps {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  behavioral: "bg-blue-500/15 text-blue-400 border-blue-500/30",
-  technical: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-  situational: "bg-amber-500/15 text-amber-400 border-amber-500/30",
-  "role-specific": "bg-purple-500/15 text-purple-400 border-purple-500/30",
+  behavioral: "border-blue-300 text-blue-700 bg-blue-50",
+  technical: "border-emerald-300 text-emerald-700 bg-emerald-50",
+  situational: "border-amber-300 text-amber-700 bg-amber-50",
+  "role-specific": "border-purple-300 text-purple-700 bg-purple-50",
 };
 
 function getCategoryColor(category: string): string {

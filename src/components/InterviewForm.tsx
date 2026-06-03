@@ -533,8 +533,8 @@ export function InterviewForm() {
 
           {error && <p className="text-sm text-destructive">{error}</p>}
 
-          <Button type="submit" disabled={isSubmitting} className="w-full">
-            {isSubmitting ? "Creating..." : "Create Interview"}
+          <Button type="submit" disabled={isSubmitting} className="w-full h-11">
+            {isSubmitting ? "Creating..." : "Create interview & generate questions \u2192"}
           </Button>
         </form>
   );

@@ -36,11 +36,14 @@ export default function RootLayout({
       className={`${body.variable} ${display.variable} ${mono.variable} dark h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <header className="border-b border-border">
-          <div className="max-w-4xl mx-auto px-6 py-3">
-            <a href="/" className="font-heading text-xl tracking-tight text-foreground">
+        <header className="border-b border-border/50">
+          <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="/" className="font-heading text-xl tracking-tight text-foreground italic">
               HappyPrep
             </a>
+            <span className="font-mono text-xs text-muted-foreground tracking-wide">
+              PREP &middot; v0.4
+            </span>
           </div>
         </header>
         <main className="flex-1 max-w-4xl mx-auto w-full px-6 py-8">

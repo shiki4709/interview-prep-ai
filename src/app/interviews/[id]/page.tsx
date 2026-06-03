@@ -114,14 +114,15 @@ export default function InterviewDetailPage() {
       </div>
 
       <div>
-        <h1 className="text-2xl font-heading font-semibold tracking-tight">
+        <h1 className="text-3xl font-heading tracking-tight">
           {interview.companyName}
         </h1>
         <p className="text-muted-foreground mt-1">{interview.roleName}</p>
         {interview.interviewerName && (
-          <p className="text-sm text-muted-foreground mt-2">
-            Interviewer: {interview.interviewerName}
-          </p>
+          <div className="mt-3 flex items-center gap-2">
+            <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Interviewer</span>
+            <span className="text-sm font-medium">{interview.interviewerName}</span>
+          </div>
         )}
       </div>
 

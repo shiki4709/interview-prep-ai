@@ -4,7 +4,19 @@ import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { PracticeSession } from "@/components/PracticeSession";
+
+const CATEGORY_COLORS: Record<string, string> = {
+  behavioral: "border-blue-300 text-blue-700 bg-blue-50",
+  technical: "border-emerald-300 text-emerald-700 bg-emerald-50",
+  situational: "border-amber-300 text-amber-700 bg-amber-50",
+  "role-specific": "border-purple-300 text-purple-700 bg-purple-50",
+};
+
+function getCategoryColor(category: string): string {
+  return CATEGORY_COLORS[category.toLowerCase()] ?? "border-border text-muted-foreground";
+}
 
 interface Question {
   readonly id: number;
@@ -67,6 +79,10 @@ export default function PracticePage() {
     ? interview.questions.find((q) => q.id === Number(questionId))
     : null;
 
+  const questionIndex = question
+    ? interview.questions.findIndex((q) => q.id === question.id) + 1
+    : 0;
+
   if (!question) {
     return (
       <div className="text-center py-12">
@@ -89,13 +105,13 @@ export default function PracticePage() {
         </Link>
       </div>
 
-      <div>
-        <h1 className="text-xl font-heading font-semibold tracking-tight">
-          Practice Session
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Record your answer, then get AI feedback.
-        </p>
+      <div className="flex items-center gap-3">
+        <Badge variant="outline" className={getCategoryColor(question.category)}>
+          {question.category}
+        </Badge>
+        <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
+          Question {questionIndex} of {interview.questions.length}
+        </span>
       </div>
 
       <PracticeSession

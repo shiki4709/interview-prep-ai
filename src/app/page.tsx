@@ -6,9 +6,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 
 interface InterviewSummary {
@@ -39,23 +36,34 @@ export default function HomePage() {
     load();
   }, []);
 
+  const totalQuestions = interviews.reduce((sum, i) => sum + i.questionCount, 0);
+
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-heading font-semibold tracking-tight">Interviews</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Paste a JD, practice with AI, get better.
+      <div className="space-y-4">
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-heading tracking-tight">
+              Interviews, <em>ready when you are.</em>
+            </h1>
+            <p className="text-sm text-muted-foreground mt-2 max-w-lg">
+              Paste a JD, get tailored questions, and rehearse out loud until the answers feel like yours.
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Link href="/history">
+              <Button variant="outline" size="default" className="h-11 px-5">Past Sessions</Button>
+            </Link>
+            <Link href="/interviews/new">
+              <Button size="default" className="h-11 px-5">New Interview</Button>
+            </Link>
+          </div>
+        </div>
+        {!loading && interviews.length > 0 && (
+          <p className="font-mono text-xs text-muted-foreground tracking-widest uppercase">
+            {interviews.length} interview{interviews.length !== 1 ? "s" : ""} &middot; {totalQuestions} question{totalQuestions !== 1 ? "s" : ""}
           </p>
-        </div>
-        <div className="flex gap-2">
-          <Link href="/history">
-            <Button variant="outline" size="default" className="h-11 px-5">Past Sessions</Button>
-          </Link>
-          <Link href="/interviews/new">
-            <Button size="default" className="h-11 px-5">New Interview</Button>
-          </Link>
-        </div>
+        )}
       </div>
 
       {loading && (
@@ -78,27 +86,29 @@ export default function HomePage() {
         </div>
       )}
 
-      <div className="grid gap-4">
-        {interviews.map((interview) => (
+      <div className="grid gap-3">
+        {interviews.map((interview, index) => (
           <Link key={interview.id} href={`/interviews/${interview.id}`}>
             <Card className="hover:bg-accent/50 transition-colors cursor-pointer">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-base">
-                    {interview.companyName}
-                  </CardTitle>
-                  <span className="text-xs text-muted-foreground">
-                    {new Date(interview.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-                <CardDescription>{interview.roleName}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <span className="text-xs text-muted-foreground">
-                  {interview.questionCount > 0
-                    ? `${interview.questionCount} question${interview.questionCount !== 1 ? "s" : ""}`
-                    : "No questions generated yet"}
+              <CardContent className="py-4 flex items-center gap-5">
+                <span className="font-mono text-sm text-muted-foreground w-6 shrink-0">
+                  {String(index + 1).padStart(2, "0")}
                 </span>
+                <div className="flex-1 min-w-0">
+                  <p className="font-heading text-base tracking-tight">
+                    {interview.companyName}
+                  </p>
+                  <p className="text-sm text-muted-foreground">{interview.roleName}</p>
+                </div>
+                {interview.questionCount > 0 && (
+                  <span className="text-xs font-mono px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    {interview.questionCount} Q{interview.questionCount !== 1 ? "s" : ""}
+                  </span>
+                )}
+                <span className="font-mono text-xs text-muted-foreground">
+                  {new Date(interview.createdAt).toLocaleDateString()}
+                </span>
+                <span className="text-muted-foreground">&rarr;</span>
               </CardContent>
             </Card>
           </Link>
