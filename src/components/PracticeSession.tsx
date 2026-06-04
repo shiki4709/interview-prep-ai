@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { EvaluationResult } from "./EvaluationResult";
 
 interface PracticeSessionProps {
@@ -31,16 +29,13 @@ function formatTime(seconds: number): string {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-function getTimerColor(seconds: number): string {
-  if (seconds >= 210) return "text-red-400";
-  if (seconds >= 150) return "text-amber-400";
-  return "text-foreground";
+function getTimerState(seconds: number): "ok" | "warn" | "danger" {
+  if (seconds >= 210) return "danger";
+  if (seconds >= 150) return "warn";
+  return "ok";
 }
 
-export function PracticeSession({
-  question,
-  interviewId,
-}: PracticeSessionProps) {
+export function PracticeSession({ question, interviewId }: PracticeSessionProps) {
   const [state, setState] = useState<SessionState>("idle");
   const [elapsed, setElapsed] = useState(0);
   const [transcription, setTranscription] = useState("");
@@ -71,42 +66,28 @@ export function PracticeSession({
     try {
       setError(null);
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
       const mediaRecorder = new MediaRecorder(stream, {
         mimeType: MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
           ? "audio/webm;codecs=opus"
           : "audio/webm",
       });
-
       chunksRef.current = [];
-
       mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-          chunksRef.current.push(e.data);
-        }
+        if (e.data.size > 0) chunksRef.current.push(e.data);
       };
-
       mediaRecorder.onstop = async () => {
         stream.getTracks().forEach((track) => track.stop());
         stopTimer();
-
         const blob = new Blob(chunksRef.current, { type: "audio/webm" });
         await processRecording(blob);
       };
-
       mediaRecorderRef.current = mediaRecorder;
       mediaRecorder.start(1000);
-
       setElapsed(0);
       setState("recording");
-
-      timerRef.current = setInterval(() => {
-        setElapsed((prev) => prev + 1);
-      }, 1000);
+      timerRef.current = setInterval(() => setElapsed((prev) => prev + 1), 1000);
     } catch {
-      setError(
-        "Microphone access denied. Please allow microphone access and try again."
-      );
+      setError("Microphone access denied. Please allow microphone access and try again.");
     }
   }
 
@@ -118,61 +99,36 @@ export function PracticeSession({
 
   async function processRecording(blob: Blob) {
     setState("transcribing");
-
     try {
       const formData = new FormData();
       formData.append("audio", blob, "recording.webm");
-
-      const transcribeRes = await fetch("/api/transcribe", {
-        method: "POST",
-        body: formData,
-      });
-
+      const transcribeRes = await fetch("/api/transcribe", { method: "POST", body: formData });
       const transcribeData = await transcribeRes.json();
-
-      if (!transcribeData.success) {
-        throw new Error(transcribeData.error || "Transcription failed");
-      }
-
-      const transcribedText = transcribeData.data.text;
-      setTranscription(transcribedText);
+      if (!transcribeData.success) throw new Error(transcribeData.error || "Transcription failed");
+      setTranscription(transcribeData.data.text);
       setState("reviewing");
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : "Something went wrong";
-      setError(message);
+      setError(err instanceof Error ? err.message : "Something went wrong");
       setState("error");
     }
   }
 
   async function submitForEvaluation() {
+    if (state !== "reviewing") return;
     setState("evaluating");
     setError(null);
-
     try {
       const evaluateRes = await fetch("/api/evaluate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          questionId: question.id,
-          interviewId,
-          transcription,
-          duration: elapsed,
-        }),
+        body: JSON.stringify({ questionId: question.id, interviewId, transcription, duration: elapsed }),
       });
-
       const evaluateData = await evaluateRes.json();
-
-      if (!evaluateData.success) {
-        throw new Error(evaluateData.error || "Evaluation failed");
-      }
-
+      if (!evaluateData.success) throw new Error(evaluateData.error || "Evaluation failed");
       setEvaluation(evaluateData.data.evaluation);
       setState("done");
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : "Evaluation failed";
-      setError(message);
+      setError(err instanceof Error ? err.message : "Evaluation failed");
       setState("error");
     }
   }
@@ -185,142 +141,229 @@ export function PracticeSession({
     setError(null);
   }
 
+  const isLive = state === "recording";
+  const timerState = getTimerState(elapsed);
+
   return (
-    <div className="space-y-6">
-      {/* Question text */}
-      <h2 className="font-heading text-[1.5rem] leading-relaxed tracking-tight">
-        {question.question}
-      </h2>
+    <div>
+      {/* Question panel */}
+      <div className="panel panel-pad">
+        <h2 className="display" style={{ fontSize: 30, lineHeight: 1.14, maxWidth: "24ch" }}>
+          {question.question}
+        </h2>
 
-      {/* Intent / Testing */}
-      {question.intent && (
-        <p className="text-sm text-muted-foreground">
-          <span className="font-mono text-[11px] uppercase tracking-[0.2em]">Testing:</span>{" "}
-          {question.intent}
-        </p>
-      )}
-
-      {/* Recording section inside a card */}
-      <Card>
-        <CardContent className="py-6 space-y-5">
-          <p className="text-sm font-medium border-b border-border pb-2">
-            Recording
+        {question.intent && (
+          <p style={{ fontSize: 13, color: "var(--text-3)", marginTop: 12, maxWidth: "60ch" }}>
+            <b style={{ color: "var(--text-2)", fontWeight: 600 }}>Testing:</b> {question.intent}
           </p>
+        )}
 
-          <div className="flex flex-col items-center gap-4">
-            {state === "idle" && (
-              <>
-                <button
-                  onClick={startRecording}
-                  className="w-16 h-16 rounded-full bg-red-500 hover:bg-red-600 transition-colors flex items-center justify-center"
-                  aria-label="Start recording"
-                >
-                  <div className="w-5 h-5 rounded-full bg-white" />
-                </button>
-                <span className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.2em]">
-                  Ready to record
-                </span>
-                <p className="text-sm text-muted-foreground text-center max-w-sm">
-                  Tap to start. Aim for two to three minutes &mdash; like the real thing.
-                </p>
-                <div className="flex flex-col items-center gap-1">
-                  <span className={`font-mono text-2xl tabular-nums ${getTimerColor(elapsed)}`}>
-                    {formatTime(elapsed)}
-                  </span>
-                  <span className="font-mono text-[10px] text-muted-foreground tracking-wider">
-                    AMBER 2:30 &middot; RED 3:30
-                  </span>
-                </div>
-              </>
-            )}
+        <hr style={{ border: "none", borderTop: "1px solid var(--border)", margin: "22px 0" }} />
 
-            {state === "recording" && (
-              <>
-                <button
-                  onClick={stopRecording}
-                  className="w-16 h-16 rounded-full bg-red-500 hover:bg-red-600 transition-colors flex items-center justify-center"
-                  aria-label="Stop recording"
-                >
-                  <div className="w-5 h-5 rounded-sm bg-white" />
-                </button>
-                <div className="flex items-center gap-2">
-                  <span className="relative flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500" />
-                  </span>
-                  <span className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.2em]">
-                    Recording
-                  </span>
-                </div>
-                <div className="flex flex-col items-center gap-1">
-                  <span className={`font-mono text-2xl tabular-nums ${getTimerColor(elapsed)}`}>
-                    {formatTime(elapsed)}
-                  </span>
-                  <span className="font-mono text-[10px] text-muted-foreground tracking-wider">
-                    AMBER 2:30 &middot; RED 3:30
-                  </span>
-                </div>
-              </>
-            )}
+        {/* Recording section */}
+        <div className="slabel" style={{ marginBottom: 18 }}>Recording</div>
 
-            {state === "transcribing" && (
-              <p className="text-sm text-muted-foreground animate-pulse py-4">
-                Transcribing your answer...
-              </p>
-            )}
-
-            {state === "reviewing" && (
-              <div className="flex gap-2">
-                <Button onClick={submitForEvaluation} size="lg">
-                  Evaluate
-                </Button>
-                <Button onClick={reset} variant="outline" size="lg">
-                  Re-record
-                </Button>
-              </div>
-            )}
-
-            {state === "evaluating" && (
-              <p className="text-sm text-muted-foreground animate-pulse py-4">
-                Evaluating your answer...
-              </p>
-            )}
-
-            {(state === "done" || state === "error") && (
-              <Button onClick={reset} variant="outline">
-                Try Again
-              </Button>
-            )}
-          </div>
-
-          {error && (
-            <p className="text-sm text-destructive mt-4">{error}</p>
+        <div
+          className="flex items-center"
+          style={{ gap: 24 }}
+        >
+          {/* Record button */}
+          {(state === "idle" || state === "recording") && (
+            <button
+              onClick={isLive ? stopRecording : startRecording}
+              style={{
+                width: 60,
+                height: 60,
+                borderRadius: "50%",
+                flexShrink: 0,
+                border: `2px solid ${isLive ? "oklch(0.58 0.20 25)" : "var(--border-2)"}`,
+                background: "var(--accent)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                transition: "border-color 0.15s, background 0.15s",
+              }}
+              aria-label={isLive ? "Stop recording" : "Start recording"}
+            >
+              <div
+                style={{
+                  width: isLive ? 18 : 21,
+                  height: isLive ? 18 : 21,
+                  borderRadius: isLive ? 4 : "50%",
+                  background: "oklch(0.58 0.20 25)",
+                  transition: "all 0.18s",
+                }}
+              />
+            </button>
           )}
-        </CardContent>
-      </Card>
 
+          {/* Status + hint */}
+          {(state === "idle" || state === "recording") && (
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div className="flex items-center" style={{ gap: 9 }}>
+                <span
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    background: isLive ? "oklch(0.58 0.20 25)" : "var(--text-3)",
+                    animation: isLive ? "pulse 1.4s ease-in-out infinite" : "none",
+                  }}
+                />
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 11,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase" as const,
+                    color: isLive ? "var(--text-2)" : "var(--text-3)",
+                  }}
+                >
+                  {isLive
+                    ? "Recording"
+                    : elapsed > 0
+                      ? `Recorded \u00B7 ${formatTime(elapsed)}`
+                      : "Ready to record"}
+                </span>
+              </div>
+              <p style={{ fontSize: 12.5, color: "var(--text-3)", marginTop: 7 }}>
+                {isLive
+                  ? "Click the button to stop"
+                  : "Tap to start. Aim for two to three minutes."}
+              </p>
+            </div>
+          )}
+
+          {/* Waveform (recording only) */}
+          {isLive && (
+            <div className="flex items-center" style={{ gap: 3, height: 26 }}>
+              {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                <i
+                  key={i}
+                  style={{
+                    width: 3,
+                    height: 6,
+                    borderRadius: 2,
+                    background: "var(--signal-accent)",
+                    animation: `bounce 0.9s ease-in-out infinite`,
+                    animationDelay: `${(i - 1) * 0.12}s`,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Timer */}
+          {(state === "idle" || state === "recording") && (
+            <div style={{ textAlign: "right" }}>
+              <div
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 38,
+                  fontWeight: 500,
+                  lineHeight: 1,
+                  color:
+                    timerState === "danger"
+                      ? "oklch(0.58 0.20 25)"
+                      : timerState === "warn"
+                        ? "oklch(0.62 0.14 62)"
+                        : "var(--foreground)",
+                }}
+              >
+                {formatTime(elapsed)}
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 10,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase" as const,
+                  color: "var(--text-3)",
+                  marginTop: 7,
+                  textAlign: "right",
+                }}
+              >
+                Amber 2:30 &middot; Red 3:30
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Transcribing state */}
+        {state === "transcribing" && (
+          <p style={{ fontSize: 14, color: "var(--text-3)", padding: "16px 0" }} className="animate-pulse">
+            Transcribing your answer...
+          </p>
+        )}
+
+        {/* Evaluating state */}
+        {state === "evaluating" && (
+          <p style={{ fontSize: 14, color: "var(--text-3)", padding: "16px 0" }} className="animate-pulse">
+            Evaluating your answer...
+          </p>
+        )}
+
+        {error && (
+          <p style={{ fontSize: 14, color: "var(--destructive)", marginTop: 16 }}>{error}</p>
+        )}
+      </div>
+
+      {/* Transcript review */}
       {state === "reviewing" && (
-        <Card>
-          <CardContent className="py-4 space-y-3">
-            <p className="text-sm font-medium">Review Transcription</p>
-            <p className="text-xs text-muted-foreground">
-              Fix any transcription errors before evaluating.
-            </p>
+        <div style={{ marginTop: 14 }}>
+          <div className="panel panel-pad">
+            <div className="flex items-center justify-between" style={{ marginBottom: 12 }}>
+              <span className="slabel">Transcript</span>
+              <span className="field-note">Auto-transcribed &middot; editable</span>
+            </div>
             <textarea
               value={transcription}
               onChange={(e) => setTranscription(e.target.value)}
               rows={8}
-              className="w-full rounded-md border bg-background px-3 py-2 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-ring"
+              style={{
+                width: "100%",
+                background: "var(--card)",
+                border: "1px solid var(--border-2)",
+                borderRadius: 8,
+                padding: "11px 13px",
+                fontSize: 14,
+                fontFamily: "var(--font-sans)",
+                color: "var(--foreground)",
+                outline: "none",
+                resize: "vertical",
+                lineHeight: 1.6,
+              }}
             />
-          </CardContent>
-        </Card>
+            <button
+              onClick={submitForEvaluation}
+              className="btn-design btn-design-primary"
+              style={{ width: "100%", height: 46, fontSize: 14.5, marginTop: 16 }}
+            >
+              Evaluate answer &rarr;
+            </button>
+          </div>
+        </div>
       )}
 
+      {/* Evaluation results */}
       {state === "done" && evaluation && (
-        <EvaluationResult
-          evaluation={evaluation}
-          transcription={transcription}
-        />
+        <div style={{ marginTop: 24 }}>
+          <EvaluationResult evaluation={evaluation} transcription={transcription} />
+          <div className="flex" style={{ gap: 10, marginTop: 28 }}>
+            <button onClick={reset} className="btn-design btn-design-ghost">
+              Try again
+            </button>
+          </div>
+        </div>
+      )}
+
+      {state === "error" && (
+        <div style={{ marginTop: 24 }}>
+          <button onClick={reset} className="btn-design btn-design-ghost">
+            Try Again
+          </button>
+        </div>
       )}
     </div>
   );

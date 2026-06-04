@@ -1,10 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 
 interface Question {
   readonly id: number;
@@ -19,15 +15,15 @@ interface QuestionListProps {
   readonly interviewId: number;
 }
 
-const CATEGORY_COLORS: Record<string, string> = {
-  behavioral: "border-blue-300 text-blue-700 bg-blue-50",
-  technical: "border-emerald-300 text-emerald-700 bg-emerald-50",
-  situational: "border-amber-300 text-amber-700 bg-amber-50",
-  "role-specific": "border-purple-300 text-purple-700 bg-purple-50",
+const CATEGORY_TAG: Record<string, string> = {
+  behavioral: "tag-blue",
+  technical: "tag-green",
+  situational: "tag-amber",
+  "role-specific": "tag-purple",
 };
 
-function getCategoryColor(category: string): string {
-  return CATEGORY_COLORS[category.toLowerCase()] ?? "bg-muted text-muted-foreground";
+function getCategoryTag(category: string): string {
+  return CATEGORY_TAG[category.toLowerCase()] ?? "";
 }
 
 function groupByCategory(
@@ -50,51 +46,68 @@ export function QuestionList({ questions, interviewId }: QuestionListProps) {
 
   if (categories.length === 0) {
     return (
-      <p className="text-muted-foreground text-center py-8">
+      <p style={{ color: "var(--text-3)", textAlign: "center", padding: "32px 0" }}>
         No questions generated yet.
       </p>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div>
       {categories.map((category) => (
-        <div key={category}>
-          <div className="flex items-center gap-2 mb-3">
-            <Badge variant="outline" className={getCategoryColor(category)}>
+        <div key={category} style={{ marginTop: 28 }}>
+          {/* Category header */}
+          <div className="flex items-center" style={{ gap: 12, marginBottom: 14 }}>
+            <span className={`tag ${getCategoryTag(category)}`}>
               {category}
-            </Badge>
-            <span className="text-xs text-muted-foreground">
-              {grouped[category].length} question
-              {grouped[category].length !== 1 ? "s" : ""}
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 11.5,
+                color: "var(--text-3)",
+              }}
+            >
+              {grouped[category].length} question{grouped[category].length !== 1 ? "s" : ""}
             </span>
           </div>
-          <div className="space-y-3">
-            {grouped[category].map((q) => (
-              <Card key={q.id} className="bg-card/50">
-                <CardContent className="py-4 flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium leading-relaxed">
-                      {q.question}
-                    </p>
-                    {q.intent && (
-                      <p className="text-xs text-muted-foreground mt-1.5">
-                        Intent: {q.intent}
-                      </p>
-                    )}
-                  </div>
-                  <Link
-                    href={`/interviews/${interviewId}/practice?questionId=${q.id}`}
-                  >
-                    <Button variant="outline" size="sm">
-                      Practice
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          <Separator className="mt-6" />
+
+          {/* Question cards */}
+          {grouped[category].map((q) => (
+            <div
+              key={q.id}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr auto",
+                gap: 18,
+                alignItems: "center",
+                background: "var(--card)",
+                border: "1px solid var(--border)",
+                borderRadius: 12,
+                padding: "17px 19px",
+                marginBottom: 10,
+                transition: "border-color 0.12s, box-shadow 0.12s",
+              }}
+              className="qcard-hover"
+            >
+              <div>
+                <p style={{ fontSize: 15, lineHeight: 1.5, color: "var(--foreground)", maxWidth: "60ch" }}>
+                  {q.question}
+                </p>
+                {q.intent && (
+                  <p style={{ fontSize: 12.5, color: "var(--text-3)", marginTop: 8 }}>
+                    <b style={{ color: "var(--text-2)", fontWeight: 600 }}>Testing:</b> {q.intent}
+                  </p>
+                )}
+              </div>
+              <Link
+                href={`/interviews/${interviewId}/practice?questionId=${q.id}`}
+                className="btn-design btn-design-ghost"
+              >
+                &#9654; Practice
+              </Link>
+            </div>
+          ))}
         </div>
       ))}
     </div>

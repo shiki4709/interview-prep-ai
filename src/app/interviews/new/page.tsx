@@ -3,25 +3,33 @@ import { InterviewForm } from "@/components/InterviewForm";
 
 export default function NewInterviewPage() {
   return (
-    <div className="space-y-6">
-      <Link
-        href="/"
-        className="inline-block font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase hover:text-foreground transition-colors"
-      >
-        &larr; Interviews
+    <div>
+      <Link href="/" className="back-link">
+        <span>&larr;</span> Interviews
       </Link>
 
-      <div>
-        <h1 className="text-3xl font-heading tracking-tight">
-          New Interview
-        </h1>
-        <p className="text-sm text-muted-foreground mt-2 max-w-lg leading-relaxed">
-          Drop in the role &mdash; HappyPrep reads the description and pulls out
-          everything it needs to write your questions.
-        </p>
+      <div className="page-head">
+        <div>
+          <h1 className="display" style={{ fontSize: 42 }}>
+            New interview
+          </h1>
+          <p
+            style={{
+              color: "var(--text-2)",
+              fontSize: 14,
+              marginTop: 10,
+              maxWidth: "48ch",
+            }}
+          >
+            Drop in the role &mdash; HappyPrep reads the description and pulls
+            out everything it needs to write your questions.
+          </p>
+        </div>
       </div>
 
-      <InterviewForm />
+      <div className="panel panel-pad" style={{ marginTop: 28, maxWidth: 660 }}>
+        <InterviewForm />
+      </div>
     </div>
   );
 }

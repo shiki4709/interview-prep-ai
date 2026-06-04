@@ -3,20 +3,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { PracticeSession } from "@/components/PracticeSession";
 
-const CATEGORY_COLORS: Record<string, string> = {
-  behavioral: "border-blue-300 text-blue-700 bg-blue-50",
-  technical: "border-emerald-300 text-emerald-700 bg-emerald-50",
-  situational: "border-amber-300 text-amber-700 bg-amber-50",
-  "role-specific": "border-purple-300 text-purple-700 bg-purple-50",
+const CATEGORY_TAG: Record<string, string> = {
+  behavioral: "tag-blue",
+  technical: "tag-green",
+  situational: "tag-amber",
+  "role-specific": "tag-purple",
 };
-
-function getCategoryColor(category: string): string {
-  return CATEGORY_COLORS[category.toLowerCase()] ?? "border-border text-muted-foreground";
-}
 
 interface Question {
   readonly id: number;
@@ -60,16 +54,18 @@ export default function PracticePage() {
 
   if (loading) {
     return (
-      <p className="text-sm text-muted-foreground animate-pulse">Loading...</p>
+      <p style={{ fontSize: 14, color: "var(--text-3)" }} className="animate-pulse">
+        Loading...
+      </p>
     );
   }
 
   if (!interview) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground mb-4">Interview not found.</p>
-        <Link href="/">
-          <Button variant="outline">Back to Home</Button>
+      <div style={{ textAlign: "center", padding: "48px 0" }}>
+        <p style={{ color: "var(--text-2)", marginBottom: 16 }}>Interview not found.</p>
+        <Link href="/" className="btn-design btn-design-ghost">
+          Back to Home
         </Link>
       </div>
     );
@@ -85,39 +81,43 @@ export default function PracticePage() {
 
   if (!question) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground mb-4">Question not found.</p>
-        <Link href={`/interviews/${interviewId}`}>
-          <Button variant="outline">Back to Questions</Button>
+      <div style={{ textAlign: "center", padding: "48px 0" }}>
+        <p style={{ color: "var(--text-2)", marginBottom: 16 }}>Question not found.</p>
+        <Link href={`/interviews/${interviewId}`} className="btn-design btn-design-ghost">
+          Back to Questions
         </Link>
       </div>
     );
   }
 
+  const catTag = CATEGORY_TAG[question.category.toLowerCase()] ?? "";
+
   return (
-    <div className="space-y-6">
-      {/* Back link in uppercase mono */}
+    <div>
       <Link
         href={`/interviews/${interviewId}`}
-        className="inline-block font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase hover:text-foreground transition-colors"
+        className="back-link"
       >
-        &larr; {interview.companyName} &middot; {interview.roleName}
+        <span>&larr;</span> {interview.companyName} &middot; {interview.roleName}
       </Link>
 
-      {/* Category badge + question counter */}
-      <div className="flex items-center gap-3">
-        <Badge variant="outline" className={getCategoryColor(question.category)}>
-          {question.category}
-        </Badge>
-        <span className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.2em]">
+      {/* Category pill + question counter */}
+      <div className="flex items-center" style={{ gap: 10, marginBottom: 18 }}>
+        <span className={`tag ${catTag}`}>{question.category}</span>
+        <span
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 11,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase" as const,
+            color: "var(--text-3)",
+          }}
+        >
           Question {questionIndex} of {interview.questions.length}
         </span>
       </div>
 
-      <PracticeSession
-        question={question}
-        interviewId={interview.id}
-      />
+      <PracticeSession question={question} interviewId={interview.id} />
     </div>
   );
 }

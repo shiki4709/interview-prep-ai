@@ -3,10 +3,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { QuestionList } from "@/components/QuestionList";
 
 interface Question {
@@ -60,21 +56,17 @@ export default function InterviewDetailPage() {
   async function handleGenerate() {
     setGenerating(true);
     setError(null);
-
     try {
       const res = await fetch("/api/generate-questions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ interviewId: Number(id) }),
       });
-
       const data = await res.json();
-
       if (!data.success) {
         setError(data.error || "Failed to generate questions");
         return;
       }
-
       await loadInterview();
     } catch {
       setError("Failed to generate questions. Please try again.");
@@ -85,16 +77,18 @@ export default function InterviewDetailPage() {
 
   if (loading) {
     return (
-      <p className="text-sm text-muted-foreground animate-pulse">Loading...</p>
+      <p style={{ fontSize: 14, color: "var(--text-3)" }} className="animate-pulse">
+        Loading...
+      </p>
     );
   }
 
   if (!interview) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground mb-4">Interview not found.</p>
-        <Link href="/">
-          <Button variant="outline">Back to Home</Button>
+      <div style={{ textAlign: "center", padding: "48px 0" }}>
+        <p style={{ color: "var(--text-2)", marginBottom: 16 }}>Interview not found.</p>
+        <Link href="/" className="btn-design btn-design-ghost">
+          Back to Home
         </Link>
       </div>
     );
@@ -103,69 +97,70 @@ export default function InterviewDetailPage() {
   const hasQuestions = interview.questions.length > 0;
 
   return (
-    <div className="space-y-8">
-      <Link
-        href="/"
-        className="inline-block font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase hover:text-foreground transition-colors"
-      >
-        &larr; Interviews
+    <div>
+      <Link href="/" className="back-link">
+        <span>&larr;</span> Interviews
       </Link>
 
-      <div>
-        <h1 className="text-3xl font-heading tracking-tight">
+      {/* Interview header */}
+      <div style={{ marginBottom: 22 }}>
+        <h1 className="display" style={{ fontSize: 40, lineHeight: 1 }}>
           {interview.companyName}
         </h1>
-        <p className="text-muted-foreground mt-1">{interview.roleName}</p>
-        {interview.interviewerName && (
-          <div className="mt-3 flex items-center gap-2">
-            <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Interviewer</span>
-            <span className="text-sm font-medium">{interview.interviewerName}</span>
-          </div>
-        )}
-      </div>
-
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm">Job Description</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto">
-            {interview.jobDescription}
-          </p>
-        </CardContent>
-      </Card>
-
-      <Separator />
-
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Questions</h2>
-          {!hasQuestions && (
-            <Button
-              onClick={handleGenerate}
-              disabled={generating}
-            >
-              {generating ? "Generating..." : "Generate Questions"}
-            </Button>
+        <div className="flex items-center flex-wrap" style={{ gap: 12, marginTop: 12 }}>
+          <span style={{ color: "var(--text-2)", fontSize: 15 }}>
+            {interview.roleName}
+          </span>
+          {interview.interviewerName && (
+            <span className="tag">
+              <span
+                className="dot"
+                style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--text-3)" }}
+              />
+              {interview.interviewerName}
+              {interview.interviewerBackground && (
+                <span style={{ color: "var(--text-3)" }}>
+                  &middot; {interview.interviewerBackground.split(".")[0]}
+                </span>
+              )}
+            </span>
           )}
         </div>
-
-        {error && <p className="text-sm text-destructive">{error}</p>}
-
-        {hasQuestions ? (
-          <QuestionList
-            questions={interview.questions}
-            interviewId={interview.id}
-          />
-        ) : (
-          !generating && (
-            <p className="text-sm text-muted-foreground">
-              Click "Generate Questions" to create tailored interview questions
-              based on the job description.
-            </p>
-          )
-        )}
       </div>
+
+      {/* Stat line */}
+      {hasQuestions && (
+        <div className="stat-line">
+          {interview.questions.length} QUESTION{interview.questions.length !== 1 ? "S" : ""}
+        </div>
+      )}
+
+      {/* Generate button when no questions */}
+      {!hasQuestions && (
+        <div style={{ marginTop: 28 }}>
+          <button
+            onClick={handleGenerate}
+            disabled={generating}
+            className="btn-design btn-design-primary"
+            style={{ opacity: generating ? 0.5 : 1 }}
+          >
+            {generating ? "Generating..." : "Generate Questions"}
+          </button>
+          {!generating && (
+            <p style={{ fontSize: 14, color: "var(--text-3)", marginTop: 12 }}>
+              Click to create tailored interview questions based on the job description.
+            </p>
+          )}
+        </div>
+      )}
+
+      {error && (
+        <p style={{ fontSize: 14, color: "var(--destructive)", marginTop: 12 }}>{error}</p>
+      )}
+
+      {hasQuestions && (
+        <QuestionList questions={interview.questions} interviewId={interview.id} />
+      )}
     </div>
   );
 }
