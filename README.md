@@ -2,7 +2,7 @@
 
 An AI-powered interview practice tool. Paste a job description, get tailored questions, record your answers, and receive structured evaluation against role-specific criteria.
 
-![Home](public/demo/home.png)
+![Demo](public/demo/demo.gif)
 
 ## Features
 
@@ -11,12 +11,6 @@ An AI-powered interview practice tool. Paste a job description, get tailored que
 - **Voice Practice** — Record answers directly in the browser with real-time transcription via Whisper, with a built-in timer that flags when you're running long
 - **AI Evaluation** — Get a verdict (Poor / Borderline / Solid / Outstanding) with specific strengths, improvements, and a rewritten version of your answer
 - **Session History** — Track practice sessions and review past performance over time
-
-## Demo
-
-| Create an interview | Generated questions | Practice with recording |
-|:---:|:---:|:---:|
-| ![New Interview](public/demo/new-interview.png) | ![Questions](public/demo/questions.png) | ![Practice](public/demo/practice.png) |
 
 ## Getting Started
 
