@@ -44,7 +44,13 @@ Each question must have:
 - "intent": what the interviewer is really testing with this question (1-2 sentences)
 - "evaluationCriteria": what a strong answer looks like (2-3 sentences)
 
-Mix categories based on the role. Technical roles should lean more technical. Leadership roles should lean more behavioral and situational. Always include at least 2 behavioral questions.`,
+Mix categories based on the role. Technical roles should lean more technical. Leadership roles should lean more behavioral and situational. Always include at least 2 behavioral questions.
+
+Always include these foundational questions (categorize as "behavioral"):
+- "Tell me about yourself" (tailored to the role context)
+- "Why this company?" (specific to the company)
+- "Why this role?" (specific to the role)
+Place these as the first 3 questions, then follow with the role-specific generated questions.`,
       },
       {
         role: "user",
